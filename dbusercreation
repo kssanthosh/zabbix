@@ -1,0 +1,48 @@
+Database Zabbix User creation on DB server
+
+ CREATE USER ZABBIX
+  IDENTIFIED BY <REPLACE WITH PASSWORD>
+  DEFAULT TABLESPACE SYSTEM
+  TEMPORARY TABLESPACE TEMP
+  PROFILE DEFAULT
+  ACCOUNT UNLOCK;
+  -– 2 Roles for ZABBIX
+  GRANT CONNECT TO ZABBIX;
+  GRANT RESOURCE TO ZABBIX;
+  ALTER USER ZABBIX DEFAULT ROLE ALL;
+  –- 5 System Privileges for ZABBIX
+  -- removed as it is too permissive GRANT SELECT ANY TABLE TO ZABBIX;
+  GRANT CREATE SESSION TO ZABBIX;    
+  GRANT SELECT ANY DICTIONARY TO ZABBIX;
+  GRANT UNLIMITED TABLESPACE TO ZABBIX;
+ GRANT SELECT ANY DICTIONARY TO ZABBIX;
+
+
+If it is Oracle 11g
+
+
+ CREATE USER ZABBIX
+  IDENTIFIED BY <REPLACE WITH PASSWORD>
+  DEFAULT TABLESPACE SYSTEM
+  TEMPORARY TABLESPACE TEMP
+  PROFILE DEFAULT
+  ACCOUNT UNLOCK;
+  -– 2 Roles for ZABBIX
+  GRANT CONNECT TO ZABBIX;
+  GRANT RESOURCE TO ZABBIX;
+  ALTER USER ZABBIX DEFAULT ROLE ALL;
+  –- 5 System Privileges for ZABBIX
+  -- removed as it is too permissive GRANT SELECT ANY TABLE TO ZABBIX;
+  GRANT CREATE SESSION TO ZABBIX;    
+  GRANT SELECT ANY DICTIONARY TO ZABBIX;
+  GRANT UNLIMITED TABLESPACE TO ZABBIX;
+ GRANT SELECT ANY DICTIONARY TO ZABBIX;
+
+exec dbms_network_acl_admin.create_acl(acl => ‘resolve.xml’,description => ‘resolve acl‘, principal =>’ZABBIX’,is_grant => true, privilege => ‘resolve’);
+  exec dbms_network_acl_admin.assign_acl(acl => ‘resolve.xml’, host =>’*');
+
+
+Verify it is working fine 
+
+select utl_inaddr.get_host_name(’127.0.0.1′) from dual;
+
